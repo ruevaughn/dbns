@@ -16,19 +16,25 @@ type NucleiService struct {
 	Repository nuclei.Repository
 }
 
-func (n NucleiService) GetSubdomains() error {
-	fmt.Println("Service: get subdomain")
-	n.Repository.GetSubdomains()
+func (n NucleiService) GetSubdomains(severity string, printFlags string) error {
+	rows, err := n.Repository.GetSubdomains(severity)
+	if err != nil {
+		return err
+	}
+	for _, row := range rows {
+		fmt.Println(row.Severity, row.Host, row.IP)
+	}
 	return nil
 }
 
-// http://testphp.vulnweb.com
 func (n NucleiService) AddSubdomain(url string, list string) error {
 	var args string
-	fmt.Println("Service: Add subdomain")
 	envProps := viper.GetString(`dbns.nuclei.args`)
 	if url != "" {
 		args = `-u ` + url + ` `
+	}
+	if list != "" {
+		args = `-l ` + list + ` `
 	}
 	args += envProps
 	cmd := exec.Command("nuclei", strings.Split(args, " ")...)
@@ -39,14 +45,15 @@ func (n NucleiService) AddSubdomain(url string, list string) error {
 	scanner := bufio.NewScanner(stderr)
 	for scanner.Scan() {
 		m := scanner.Text()
-
-		var reqBody nuclei.NucleiResult
-		if err := json.Unmarshal([]byte(m), &reqBody); err != nil {
-			log.Println("ERR", err)
+		var nujson nuclei.NucleiResult
+		if err := json.Unmarshal([]byte(m), &nujson); err != nil {
+			log.Println("ERR:", nuclei.ErrInvalidJsonBody)
 		}
-		fmt.Println("NUCLEI | ", reqBody.Info.Severity, " | ", reqBody.Host)
+		err := n.Repository.AddSubdomain(nujson)
+		if err != nil {
+			return err
+		}
 	}
 	cmd.Wait()
-	n.Repository.AddSubdomain()
 	return nil
 }

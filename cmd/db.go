@@ -16,31 +16,20 @@ limitations under the License.
 package cmd
 
 import (
-	"database/sql"
-	"log"
-
 	"github.com/spf13/cobra"
 	"github.com/xm1k3/dbns/config"
-	"github.com/xm1k3/dbns/nuclei"
 	"github.com/xm1k3/dbns/nuclei/repositories"
 	"github.com/xm1k3/dbns/nuclei/services"
 )
 
-var (
-	psqlDB *sql.DB
-)
-
-// nucleiCmd represents the nuclei command
-var nucleiCmd = &cobra.Command{
-	Use:   "nuclei",
-	Short: "Nuclei Scanner command",
-	Long:  "Nuclei Scanner command",
+// dbCmd represents the db command
+var dbCmd = &cobra.Command{
+	Use:   "db",
+	Short: "Retrieve data from db",
+	Long:  "Retrieve data from db",
 	Run: func(cmd *cobra.Command, args []string) {
-		listPath, _ := cmd.Flags().GetString("list")
-		url, _ := cmd.Flags().GetString("url")
-		if url == "" && listPath == "" {
-			log.Fatal("ERR:", nuclei.ErrInvalidUrlOrList)
-		}
+		severityFlag, _ := cmd.Flags().GetString("severity")
+		printFlag, _ := cmd.Flags().GetString("print")
 		psqlDB = config.Connect()
 		repository := repositories.PsqlNucleiRepository{
 			DB:    psqlDB,
@@ -49,13 +38,13 @@ var nucleiCmd = &cobra.Command{
 		service := services.NucleiService{
 			Repository: repository,
 		}
-		service.AddSubdomain(url, listPath)
+		service.GetSubdomains(severityFlag, printFlag)
 	},
 }
 
 func init() {
-	rootCmd.AddCommand(nucleiCmd)
+	rootCmd.AddCommand(dbCmd)
 
-	nucleiCmd.Flags().StringP("list", "l", "", "path to file containing a list of target URLs/hosts to scan (one per line)")
-	nucleiCmd.Flags().StringP("url", "u", "", "target URLs/hosts to scan")
+	dbCmd.Flags().StringP("severity", "s", "high", "Severity flag")
+	dbCmd.Flags().StringP("print", "p", "h", "Print flags (t,h,s,n,t,i)")
 }

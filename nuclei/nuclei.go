@@ -1,9 +1,21 @@
 package nuclei
 
-import "time"
+import (
+	"errors"
+	"time"
+)
 
-// type NucleiResult struct {
-// }
+var ErrInvalidJsonBody = errors.New("invalid json body")
+var ErrInvalidUrlOrList = errors.New("you need to insert an url or list")
+
+type NucleiDB struct {
+	TemplateID string
+	Host       string
+	Severity   string
+	Name       string
+	Tags       string
+	IP         string
+}
 
 type NucleiResult struct {
 	TemplateID  string    `json:"templateID"`
@@ -25,11 +37,11 @@ type Info struct {
 }
 
 type Service interface {
-	GetSubdomains() error
+	GetSubdomains(severity string, printFlags string) error
 	AddSubdomain(url string, list string) error
 }
 
 type Repository interface {
-	GetSubdomains() error
-	AddSubdomain() error
+	GetSubdomains(severity string) ([]NucleiDB, error)
+	AddSubdomain(res NucleiResult) error
 }
