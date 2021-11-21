@@ -1,0 +1,2 @@
+# dbns
+Database Nuclei Scanner
