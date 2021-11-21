@@ -1,4 +1,5 @@
 CREATE TABLE IF NOT EXISTS nuclei (
+    id serial,
     templateID VARCHAR (512),
     host VARCHAR(512),
     severity VARCHAR(64),
