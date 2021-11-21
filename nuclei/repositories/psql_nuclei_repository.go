@@ -2,7 +2,6 @@ package repositories
 
 import (
 	"database/sql"
-	"log"
 
 	"github.com/xm1k3/dbns/nuclei"
 )
@@ -25,12 +24,12 @@ func (n PsqlNucleiRepository) GetSubdomains(severity string) ([]nuclei.NucleiDB,
 	var rows []nuclei.NucleiDB
 	records, err := n.DB.Query(`select templateid,host,severity,name,tags,ip from "` + n.Table + `" where severity = '` + severity + `'`)
 	if err != nil {
-		log.Fatal("ERR", err)
+		return []nuclei.NucleiDB{}, err
 	}
 	for records.Next() {
 		err = records.Scan(&templateID, &host, &severity, &name, &tags, &ip)
 		if err != nil {
-			log.Fatal(err)
+			return []nuclei.NucleiDB{}, err
 		}
 		rows = append(rows, nuclei.NucleiDB{
 			TemplateID: templateID,
@@ -52,7 +51,7 @@ func (n PsqlNucleiRepository) AddSubdomain(res nuclei.NucleiResult) error {
 	SET last_change = now();`
 	_, err := n.DB.Exec(sqlStatement, res.TemplateID, res.Host, res.Info.Severity, res.Info.Name, res.Info.Tags, res.MatcherName, res.Type, res.Matched, res.IP)
 	if err != nil {
-		log.Fatal(err)
+		return err
 	}
 	return nil
 }

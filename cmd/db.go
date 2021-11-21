@@ -30,6 +30,7 @@ var dbCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		severityFlag, _ := cmd.Flags().GetString("severity")
 		printFlag, _ := cmd.Flags().GetString("print")
+		delimiterFlag, _ := cmd.Flags().GetString("delimiter")
 		psqlDB = config.Connect()
 		repository := repositories.PsqlNucleiRepository{
 			DB:    psqlDB,
@@ -38,7 +39,7 @@ var dbCmd = &cobra.Command{
 		service := services.NucleiService{
 			Repository: repository,
 		}
-		service.GetSubdomains(severityFlag, printFlag)
+		service.GetSubdomains(severityFlag, printFlag, delimiterFlag)
 	},
 }
 
@@ -46,5 +47,6 @@ func init() {
 	rootCmd.AddCommand(dbCmd)
 
 	dbCmd.Flags().StringP("severity", "s", "high", "Severity flag")
-	dbCmd.Flags().StringP("print", "p", "h", "Print flags (t,h,s,n,t,i)")
+	dbCmd.Flags().StringP("print", "p", "sh", "Print flags (t,h,s,n,g,i)")
+	dbCmd.Flags().StringP("delimiter", "d", " - ", "Delimiter")
 }

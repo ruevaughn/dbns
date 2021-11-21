@@ -16,13 +16,30 @@ type NucleiService struct {
 	Repository nuclei.Repository
 }
 
-func (n NucleiService) GetSubdomains(severity string, printFlags string) error {
+func (n NucleiService) GetSubdomains(severity string, printFlags string, delimiter string) error {
 	rows, err := n.Repository.GetSubdomains(severity)
 	if err != nil {
 		return err
 	}
+	outrow := ""
 	for _, row := range rows {
-		fmt.Println(row.Severity, row.Host, row.IP)
+		for _, char := range printFlags {
+			if char == 'h' {
+				outrow += row.Host + delimiter
+			} else if char == 't' {
+				outrow += row.TemplateID + delimiter
+			} else if char == 's' {
+				outrow += row.Severity + delimiter
+			} else if char == 'n' {
+				outrow += row.Name + delimiter
+			} else if char == 'i' {
+				outrow += row.IP + delimiter
+			} else if char == 'g' {
+				outrow += row.Tags + delimiter
+			}
+		}
+		fmt.Println(strings.TrimSuffix(outrow, delimiter))
+		outrow = ""
 	}
 	return nil
 }

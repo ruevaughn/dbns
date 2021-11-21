@@ -49,7 +49,10 @@ var nucleiCmd = &cobra.Command{
 		service := services.NucleiService{
 			Repository: repository,
 		}
-		service.AddSubdomain(url, listPath)
+		err := service.AddSubdomain(url, listPath)
+		if err != nil {
+			log.Fatal(err)
+		}
 	},
 }
 

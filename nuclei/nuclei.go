@@ -37,7 +37,7 @@ type Info struct {
 }
 
 type Service interface {
-	GetSubdomains(severity string, printFlags string) error
+	GetSubdomains(severity string, printFlags string, delimiter string) error
 	AddSubdomain(url string, list string) error
 }
 
