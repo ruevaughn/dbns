@@ -16,9 +16,16 @@ limitations under the License.
 package cmd
 
 import (
-	"fmt"
+	"database/sql"
 
 	"github.com/spf13/cobra"
+	"github.com/xm1k3/dbns/config"
+	"github.com/xm1k3/dbns/nuclei/repositories"
+	"github.com/xm1k3/dbns/nuclei/services"
+)
+
+var (
+	psqlDB *sql.DB
 )
 
 // nucleiCmd represents the nuclei command
@@ -27,20 +34,23 @@ var nucleiCmd = &cobra.Command{
 	Short: "Nuclei Scanner command",
 	Long:  "Nuclei Scanner command",
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("nuclei called")
+		listPath, _ := cmd.Flags().GetString("list")
+		url, _ := cmd.Flags().GetString("url")
+		psqlDB = config.Connect()
+		repository := repositories.PsqlNucleiRepository{
+			DB:    psqlDB,
+			Table: "nucleires",
+		}
+		service := services.NucleiService{
+			Repository: repository,
+		}
+		service.AddSubdomain(url, listPath)
 	},
 }
 
 func init() {
 	rootCmd.AddCommand(nucleiCmd)
 
-	// Here you will define your flags and configuration settings.
-
-	// Cobra supports Persistent Flags which will work for this command
-	// and all subcommands, e.g.:
-	// nucleiCmd.PersistentFlags().String("foo", "", "A help for foo")
-
-	// Cobra supports local flags which will only run when this command
-	// is called directly, e.g.:
-	// nucleiCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	nucleiCmd.Flags().StringP("list", "l", "", "subdomains list path")
+	nucleiCmd.Flags().StringP("url", "u", "", "url to scan")
 }
