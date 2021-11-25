@@ -18,22 +18,22 @@ type NucleiDB struct {
 }
 
 type NucleiResult struct {
-	TemplateID  string    `json:"templateID"`
+	TemplateID  string    `json:"template-id"`
 	Info        Info      `json:"info"`
-	MatcherName string    `json:"matcher_name"`
+	MatcherName string    `json:"matcher-name"`
 	Type        string    `json:"type"`
 	Host        string    `json:"host"`
-	Matched     string    `json:"matched"`
-	IP          string    `json:"ip"`
+	MatchedAt   string    `json:"matched-at"`
 	Timestamp   time.Time `json:"timestamp"`
+	CurlCommand string    `json:"curl-command"`
 }
 
 type Info struct {
-	Name        string `json:"name"`
-	Author      string `json:"author"`
-	Severity    string `json:"severity"`
-	Description string `json:"description"`
-	Tags        string `json:"tags"`
+	Name        string   `json:"name"`
+	Tags        []string `json:"tags"`
+	Description string   `json:"description"`
+	Reference   []string `json:"reference"`
+	Severity    string   `json:"severity"`
 }
 
 type Service interface {
