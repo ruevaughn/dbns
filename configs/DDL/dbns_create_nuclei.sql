@@ -7,8 +7,9 @@ CREATE TABLE IF NOT EXISTS nuclei (
     tags VARCHAR(256),
     matcher_name VARCHAR(512),
     type VARCHAR(64),
-    matched VARCHAR(512),
-    ip VARCHAR(16),
+    matched_at VARCHAR(512),
+    reference VARCHAR(1024),
+    curl TEXT,
     first_discovered TIMESTAMP default now(),
     last_change TIMESTAMP DEFAULT now(),
     PRIMARY KEY(host, templateID)

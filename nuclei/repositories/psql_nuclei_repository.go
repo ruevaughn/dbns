@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"database/sql"
+	"strings"
 
 	"github.com/xm1k3/dbns/nuclei"
 )
@@ -12,7 +13,6 @@ var (
 	severity   string
 	name       string
 	tags       string
-	ip         string
 )
 
 type PsqlNucleiRepository struct {
@@ -22,12 +22,12 @@ type PsqlNucleiRepository struct {
 
 func (n PsqlNucleiRepository) GetSubdomains(severity string) ([]nuclei.NucleiDB, error) {
 	var rows []nuclei.NucleiDB
-	records, err := n.DB.Query(`select templateid,host,severity,name,tags,ip from "` + n.Table + `" where severity = '` + severity + `'`)
+	records, err := n.DB.Query(`select templateid,host,severity,name,tags from "` + n.Table + `" where severity = '` + severity + `'`)
 	if err != nil {
 		return []nuclei.NucleiDB{}, err
 	}
 	for records.Next() {
-		err = records.Scan(&templateID, &host, &severity, &name, &tags, &ip)
+		err = records.Scan(&templateID, &host, &severity, &name, &tags)
 		if err != nil {
 			return []nuclei.NucleiDB{}, err
 		}
@@ -37,19 +37,31 @@ func (n PsqlNucleiRepository) GetSubdomains(severity string) ([]nuclei.NucleiDB,
 			Severity:   severity,
 			Name:       name,
 			Tags:       tags,
-			IP:         ip,
 		})
 	}
 	return rows, nil
 }
 
 func (n PsqlNucleiRepository) AddSubdomain(res nuclei.NucleiResult) error {
+
+	tagsdb := ""
+	for _, author := range res.Info.Tags {
+		tagsdb += author + `,`
+	}
+	tagsdb = strings.TrimSuffix(tagsdb, `,`)
+
+	refsdb := ""
+	for _, refs := range res.Info.Reference {
+		refsdb += refs + `,`
+	}
+	refsdb = strings.TrimSuffix(refsdb, `,`)
+
 	sqlStatement := `
-	INSERT INTO ` + n.Table + ` (templateid, host, severity, name, tags, matcher_name, type, matched, ip)
-	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
+	INSERT INTO ` + n.Table + ` (templateid, host, severity, name, tags, matcher_name, type, matched_at, reference, curl)
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
 	ON CONFLICT (templateid, host) DO UPDATE
 	SET last_change = now();`
-	_, err := n.DB.Exec(sqlStatement, res.TemplateID, res.Host, res.Info.Severity, res.Info.Name, res.Info.Tags, res.MatcherName, res.Type, res.Matched, res.IP)
+	_, err := n.DB.Exec(sqlStatement, res.TemplateID, res.Host, res.Info.Severity, res.Info.Name, tagsdb, res.MatcherName, res.Type, res.MatchedAt, refsdb, res.CurlCommand)
 	if err != nil {
 		return err
 	}
