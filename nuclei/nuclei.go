@@ -7,6 +7,7 @@ import (
 
 var ErrInvalidJsonBody = errors.New("invalid json body")
 var ErrInvalidUrlOrList = errors.New("you need to insert an url or list")
+var ErrInvalidSeverity = errors.New("invalid severity")
 
 type NucleiDB struct {
 	TemplateID string
@@ -37,11 +38,13 @@ type Info struct {
 }
 
 type Service interface {
-	GetSubdomains(severity string, printFlags string, delimiter string) error
-	AddSubdomain(url string, list string) error
+	GetResultsBySeverity(severity string, printFlags string, delimiter string, latest int) error
+	GetAllResults(severity string, printFlags string, delimiter string) error
+	Scan(url string, list string, info bool) error
 }
 
 type Repository interface {
-	GetSubdomains(severity string) ([]NucleiDB, error)
+	GetResultsBySeverity(severity string, latest int) ([]NucleiDB, error)
+	GetAllResults(latest int) ([]NucleiDB, error)
 	AddSubdomain(res NucleiResult) error
 }

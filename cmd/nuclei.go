@@ -38,6 +38,7 @@ var nucleiCmd = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		listPath, _ := cmd.Flags().GetString("list")
 		url, _ := cmd.Flags().GetString("url")
+		info, _ := cmd.Flags().GetBool("info")
 		if url == "" && listPath == "" {
 			log.Fatal("ERR:", nuclei.ErrInvalidUrlOrList)
 		}
@@ -49,7 +50,7 @@ var nucleiCmd = &cobra.Command{
 		service := services.NucleiService{
 			Repository: repository,
 		}
-		err := service.AddSubdomain(url, listPath)
+		err := service.Scan(url, listPath, info)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -61,4 +62,5 @@ func init() {
 
 	nucleiCmd.Flags().StringP("list", "l", "", "path to file containing a list of target URLs/hosts to scan (one per line)")
 	nucleiCmd.Flags().StringP("url", "u", "", "target URLs/hosts to scan")
+	nucleiCmd.Flags().BoolP("info", "i", false, "scan also for info severity")
 }

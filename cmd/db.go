@@ -16,6 +16,8 @@ limitations under the License.
 package cmd
 
 import (
+	"log"
+
 	"github.com/spf13/cobra"
 	"github.com/xm1k3/dbns/config"
 	"github.com/xm1k3/dbns/nuclei/repositories"
@@ -31,6 +33,7 @@ var dbCmd = &cobra.Command{
 		severityFlag, _ := cmd.Flags().GetString("severity")
 		printFlag, _ := cmd.Flags().GetString("print")
 		delimiterFlag, _ := cmd.Flags().GetString("delimiter")
+		latest, _ := cmd.Flags().GetInt("latest")
 		psqlDB = config.Connect()
 		repository := repositories.PsqlNucleiRepository{
 			DB:    psqlDB,
@@ -39,7 +42,17 @@ var dbCmd = &cobra.Command{
 		service := services.NucleiService{
 			Repository: repository,
 		}
-		service.GetSubdomains(severityFlag, printFlag, delimiterFlag)
+		if severityFlag == "all" {
+			err := service.GetAllResults(printFlag, delimiterFlag, latest)
+			if err != nil {
+				log.Fatal(err.Error())
+			}
+		} else {
+			err := service.GetResultsBySeverity(severityFlag, printFlag, delimiterFlag, latest)
+			if err != nil {
+				log.Fatal(err.Error())
+			}
+		}
 	},
 }
 
@@ -49,4 +62,5 @@ func init() {
 	dbCmd.Flags().StringP("severity", "s", "high", "Severity flag")
 	dbCmd.Flags().StringP("print", "p", "sm", "Print flags (t,h,s,n,g,m)")
 	dbCmd.Flags().StringP("delimiter", "d", " - ", "Delimiter")
+	dbCmd.Flags().IntP("latest", "", 0, "see latest results")
 }
