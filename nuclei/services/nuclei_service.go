@@ -32,8 +32,8 @@ func (n NucleiService) GetSubdomains(severity string, printFlags string, delimit
 				outrow += row.Severity + delimiter
 			} else if char == 'n' {
 				outrow += row.Name + delimiter
-			} else if char == 'i' {
-				outrow += row.IP + delimiter
+			} else if char == 'm' {
+				outrow += row.MatchedAt + delimiter
 			} else if char == 'g' {
 				outrow += row.Tags + delimiter
 			}

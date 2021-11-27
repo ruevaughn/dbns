@@ -47,6 +47,6 @@ func init() {
 	rootCmd.AddCommand(dbCmd)
 
 	dbCmd.Flags().StringP("severity", "s", "high", "Severity flag")
-	dbCmd.Flags().StringP("print", "p", "sh", "Print flags (t,h,s,n,g,i)")
+	dbCmd.Flags().StringP("print", "p", "sm", "Print flags (t,h,s,n,g,m)")
 	dbCmd.Flags().StringP("delimiter", "d", " - ", "Delimiter")
 }

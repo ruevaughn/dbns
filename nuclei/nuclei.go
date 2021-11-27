@@ -14,7 +14,7 @@ type NucleiDB struct {
 	Severity   string
 	Name       string
 	Tags       string
-	IP         string
+	MatchedAt  string
 }
 
 type NucleiResult struct {

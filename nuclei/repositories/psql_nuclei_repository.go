@@ -10,9 +10,9 @@ import (
 var (
 	templateID string
 	host       string
-	severity   string
 	name       string
 	tags       string
+	matchedAt  string
 )
 
 type PsqlNucleiRepository struct {
@@ -22,12 +22,12 @@ type PsqlNucleiRepository struct {
 
 func (n PsqlNucleiRepository) GetSubdomains(severity string) ([]nuclei.NucleiDB, error) {
 	var rows []nuclei.NucleiDB
-	records, err := n.DB.Query(`select templateid,host,severity,name,tags from "` + n.Table + `" where severity = '` + severity + `'`)
+	records, err := n.DB.Query(`select templateid,host,severity,name,tags,matched_at from "` + n.Table + `" where severity = '` + severity + `'`)
 	if err != nil {
 		return []nuclei.NucleiDB{}, err
 	}
 	for records.Next() {
-		err = records.Scan(&templateID, &host, &severity, &name, &tags)
+		err = records.Scan(&templateID, &host, &severity, &name, &tags, &matchedAt)
 		if err != nil {
 			return []nuclei.NucleiDB{}, err
 		}
@@ -37,6 +37,7 @@ func (n PsqlNucleiRepository) GetSubdomains(severity string) ([]nuclei.NucleiDB,
 			Severity:   severity,
 			Name:       name,
 			Tags:       tags,
+			MatchedAt:  matchedAt,
 		})
 	}
 	return rows, nil
