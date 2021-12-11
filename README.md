@@ -20,7 +20,7 @@ GO111MODULE=on go get -v github.com/FleexSecurity/dbns
 dbns nuclei -u target.com
 dbns nuclei -l all.txt
 ```
-By default `dbns` ignores the results of` info`, but if you want to save them just add the `-i` flag.
+By default `dbns` ignores the results of `info`, but if you want to save them just add the `-i` flag.
 ```
 dbns nuclei -l all.txt -i
 ```
