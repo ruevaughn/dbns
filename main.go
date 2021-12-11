@@ -1,5 +1,5 @@
 /*
-Copyright © 2021 xm1k3
+Copyright © 2021 FleexSecurity
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -15,7 +15,7 @@ limitations under the License.
 */
 package main
 
-import "github.com/xm1k3/dbns/cmd"
+import "github.com/FleexSecurity/dbns/cmd"
 
 func main() {
 	cmd.Execute()

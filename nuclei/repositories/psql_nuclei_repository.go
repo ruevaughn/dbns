@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/xm1k3/dbns/nuclei"
+	"github.com/FleexSecurity/dbns/nuclei"
 )
 
 var (

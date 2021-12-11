@@ -1,4 +1,4 @@
-module github.com/xm1k3/dbns
+module github.com/FleexSecurity/dbns
 
 go 1.17
 

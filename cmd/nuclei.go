@@ -1,5 +1,5 @@
 /*
-Copyright © 2021 xm1k3
+Copyright © 2021 FleexSecurity
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
@@ -19,11 +19,11 @@ import (
 	"database/sql"
 	"log"
 
+	"github.com/FleexSecurity/dbns/config"
+	"github.com/FleexSecurity/dbns/nuclei"
+	"github.com/FleexSecurity/dbns/nuclei/repositories"
+	"github.com/FleexSecurity/dbns/nuclei/services"
 	"github.com/spf13/cobra"
-	"github.com/xm1k3/dbns/config"
-	"github.com/xm1k3/dbns/nuclei"
-	"github.com/xm1k3/dbns/nuclei/repositories"
-	"github.com/xm1k3/dbns/nuclei/services"
 )
 
 var (

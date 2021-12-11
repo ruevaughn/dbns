@@ -8,8 +8,8 @@ import (
 	"os/exec"
 	"strings"
 
+	"github.com/FleexSecurity/dbns/nuclei"
 	"github.com/spf13/viper"
-	"github.com/xm1k3/dbns/nuclei"
 )
 
 type NucleiService struct {
