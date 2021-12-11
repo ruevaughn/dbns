@@ -24,6 +24,7 @@ By default `dbns` ignores the results of `info`, but if you want to save them ju
 ```
 dbns nuclei -l all.txt -i
 ```
+`dbns nuclei -h` for more
 
 ## DB usage
 DB is the command that returns the data from the Psql Database
@@ -39,6 +40,7 @@ Type of data that can be returned:
 ```
 dbns db -p sm
 ```
+`dbns db -h` for more
 
 ## Available commands
 ```
