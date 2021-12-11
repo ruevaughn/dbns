@@ -56,7 +56,10 @@ func (n NucleiService) Scan(url string, list string, info bool) error {
 	cmd := exec.Command("nuclei", strings.Split(args, " ")...)
 
 	stderr, _ := cmd.StdoutPipe()
-	cmd.Start()
+	err := cmd.Start()
+	if err != nil {
+		return err
+	}
 
 	scanner := bufio.NewScanner(stderr)
 	for scanner.Scan() {
@@ -70,7 +73,10 @@ func (n NucleiService) Scan(url string, list string, info bool) error {
 			return err
 		}
 	}
-	cmd.Wait()
+	err = cmd.Wait()
+	if err != nil {
+		return nuclei.ErrGenericError
+	}
 	return nil
 }
 

@@ -1,0 +1,14 @@
+# ──────────────────────────────────────────────────────────────────────────────── I ──────────
+#   :::::: D B N S   D A T A B A S E   N U C L E I : :  :   :    :     :        :          :
+# ──────────────────────────────────────────────────────────────────────────────────────────
+
+dbns:
+  database:
+    host: localhost
+    user: postgres
+    password: {DBPASSWD}
+    dbname: dbns
+    port: 5432
+    sslmode: disable
+  nuclei:
+    args: "-t /home/{USERNAME}/nuclei-templates -no-color -json -silent"

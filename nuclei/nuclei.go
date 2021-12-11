@@ -8,6 +8,7 @@ import (
 var ErrInvalidJsonBody = errors.New("invalid json body")
 var ErrInvalidUrlOrList = errors.New("you need to insert an url or list")
 var ErrInvalidSeverity = errors.New("invalid severity")
+var ErrGenericError = errors.New("something went wrong when calling nuclei, please check if the args are correct")
 
 type NucleiDB struct {
 	TemplateID string
