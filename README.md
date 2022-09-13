@@ -2,7 +2,7 @@
 
 ---
 
-DBNS (DataBase Nuclei Scanner) is a tool that allows you to keep track of the scans that are done with Nuclei in a simple way by saving the results in a database.
+DBNS (DataBase for Nuclei Scanner) is a tool that allows you to keep track of the scans that are done with Nuclei in a simple way by saving the results in a database.
 
 ## Dependencies
 
@@ -12,7 +12,7 @@ DBNS (DataBase Nuclei Scanner) is a tool that allows you to keep track of the sc
 
 ## Install
 ```
-GO111MODULE=on go get -v github.com/FleexSecurity/dbns
+GO111MODULE=on go install -v github.com/FleexSecurity/dbns@latest
 ```
 
 ## Nuclei usage
