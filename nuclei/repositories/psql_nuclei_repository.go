@@ -95,11 +95,11 @@ func (p PsqlNucleiRepository) AddSubdomain(res nuclei.NucleiResult) error {
 	refsdb = strings.TrimSuffix(refsdb, `,`)
 
 	sqlStatement := `
-	INSERT INTO ` + p.Table + ` (templateid, host, severity, name, tags, matcher_name, type, matched_at, reference, curl)
-	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+	INSERT INTO ` + p.Table + ` (templateid, host, severity, name, tags, matcher_name, type, matched_at, reference)
+	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)
 	ON CONFLICT (templateid, host) DO UPDATE
 	SET last_change = now();`
-	_, err := p.DB.Exec(sqlStatement, res.TemplateID, res.Host, res.Info.Severity, res.Info.Name, tagsdb, res.MatcherName, res.Type, res.MatchedAt, refsdb, res.CurlCommand)
+	_, err := p.DB.Exec(sqlStatement, res.TemplateID, res.Host, res.Info.Severity, res.Info.Name, tagsdb, res.MatcherName, res.Type, res.MatchedAt, refsdb)
 	if err != nil {
 		return err
 	}

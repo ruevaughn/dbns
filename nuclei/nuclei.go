@@ -20,14 +20,15 @@ type NucleiDB struct {
 }
 
 type NucleiResult struct {
+	Template    string    `json:"template"`
 	TemplateID  string    `json:"template-id"`
+	TemplateUrl string    `json:"template-url"`
 	Info        Info      `json:"info"`
 	MatcherName string    `json:"matcher-name"`
 	Type        string    `json:"type"`
 	Host        string    `json:"host"`
 	MatchedAt   string    `json:"matched-at"`
 	Timestamp   time.Time `json:"timestamp"`
-	CurlCommand string    `json:"curl-command"`
 }
 
 type Info struct {
