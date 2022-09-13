@@ -1,3 +1,5 @@
+CREATE DATABASE dbns;
+
 CREATE TABLE IF NOT EXISTS nuclei (
     id serial,
     templateID VARCHAR (512),
