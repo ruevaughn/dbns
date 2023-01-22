@@ -9,6 +9,7 @@ import (
 	"strings"
 
 	"github.com/FleexSecurity/dbns/nuclei"
+	output "github.com/projectdiscovery/nuclei/v2/pkg/output"
 	"github.com/spf13/viper"
 )
 
@@ -72,6 +73,33 @@ func (n NucleiService) Scan(url string, list string, info bool) error {
 		if err != nil {
 			return err
 		}
+	}
+	err = cmd.Wait()
+	if err != nil {
+		return nuclei.ErrGenericError
+	}
+	return nil
+}
+
+func (n NucleiService) ScanTest(args []string) error {
+	cmd := exec.Command(args[0], args[1:]...)
+
+	stderr, _ := cmd.StdoutPipe()
+	err := cmd.Start()
+	if err != nil {
+		return err
+	}
+
+	scanner := bufio.NewScanner(stderr)
+	for scanner.Scan() {
+		m := scanner.Text()
+		var nujson output.ResultEvent
+		if err := json.Unmarshal([]byte(m), &nujson); err != nil {
+			// log.Println("ERR:", nuclei.ErrInvalidJsonBody)
+			return nuclei.ErrInvalidJsonBody
+		}
+
+		fmt.Println("JSON:", nujson)
 	}
 	err = cmd.Wait()
 	if err != nil {

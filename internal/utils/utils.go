@@ -2,12 +2,11 @@ package utils
 
 import (
 	"bytes"
-	"fmt"
 	"os"
 	"os/exec"
 )
 
-func RunCommand(command string, background bool) {
+func RunCommand(command string, background bool) error {
 	cmd := exec.Command("bash", "-c", command)
 	if background {
 		cmd.Stdout = os.Stdout
@@ -21,7 +20,8 @@ func RunCommand(command string, background bool) {
 	err := cmd.Run()
 	if err != nil {
 		if background {
-			fmt.Println("Error running shell command: ", command, "  => ", err.Error())
+			return err
 		}
 	}
+	return nil
 }
